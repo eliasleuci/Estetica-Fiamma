@@ -72,13 +72,14 @@ export function TeamManager() {
     return (
         <div className="space-y-6">
             <Card>
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
                     <h2 className="text-2xl font-serif text-[#3E2C23]">
                         Equipo
                     </h2>
                     <Button
                         variant="goldOutline"
                         onClick={() => { resetForm(); setIsEditing(!isEditing); }}
+                        className="shrink-0 whitespace-nowrap"
                     >
                         {isEditing ? 'CERRAR' : '+ NUEVO PROFESIONAL'}
                     </Button>
@@ -148,17 +149,17 @@ export function TeamManager() {
 
                 <div className="grid gap-3">
                     {team.map(member => (
-                        <div key={member.id} className="bg-[#FCFAF8] p-4 rounded-xl border border-[#E8DED5] flex items-center gap-4 group hover:border-[#B38A58]/50 hover:shadow-[0_4px_20px_rgba(179,138,88,0.08)] transition-all">
+                        <div key={member.id} className="bg-[#FCFAF8] p-4 rounded-xl border border-[#E8DED5] flex flex-wrap items-center gap-4 group hover:border-[#B38A58]/50 hover:shadow-[0_4px_20px_rgba(179,138,88,0.08)] transition-all">
                             <div className="w-12 h-12 rounded-full overflow-hidden border border-[#E8DED5] shrink-0">
                                 {member.image ? <img src={member.image} alt={member.name} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-stone-200 flex items-center justify-center text-xl">👤</div>}
                             </div>
-                            <div className="flex-1">
+                            <div className="flex-1 min-w-[120px]">
                                 <h3 className="font-bold text-[#3E2C23]">{member.name}</h3>
                                 <p className="text-[#B08A57] text-xs font-bold">{member.role}</p>
                                 <p className="text-[#B08A57] text-xs font-bold">{member.role}</p>
                                 <p className="text-[10px] text-[#9C8775] font-mono">ID: {member.pin || '0000'} • {member.showOnHome !== false ? '✅ Visible' : '👁️ Oculto'}</p>
                             </div>
-                            <div className="flex gap-3 transition-opacity">
+                            <div className="flex gap-3 transition-opacity ml-auto sm:ml-0">
                                 <button
                                     onClick={() => handleEdit(member)}
                                     className="text-xs font-bold text-blue-600 hover:text-blue-800"

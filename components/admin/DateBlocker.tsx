@@ -115,7 +115,7 @@ export function DateBlocker() {
 
     return (
         <Card>
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div className="flex flex-wrap justify-between items-start md:items-center mb-6 gap-4">
                 <h2 className="text-2xl font-serif font-bold text-stone-800">
                     Bloquear Fechas
                 </h2>

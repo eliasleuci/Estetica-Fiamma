@@ -492,27 +492,27 @@ export default function AdminPage() {
                             <div className="space-y-6">
                                 <div>
                                     <label className="block text-xs font-bold text-[#9C8775] mb-2 uppercase tracking-tighter">WhatsApp del Negocio</label>
-                                    <div className="flex gap-2">
+                                    <div className="flex flex-col xl:flex-row gap-2">
                                         <input
                                             value={phoneInput}
                                             onChange={e => setPhoneInput(e.target.value)}
-                                            className="flex-1 px-4 py-2 rounded-xl bg-[#FCFAF8] border border-[#E8DED5] text-[#3E2C23] outline-none focus:border-[#B38A58] focus:ring-4 focus:ring-[#B38A58]/10 transition-all"
+                                            className="flex-1 min-w-0 px-4 py-2 rounded-xl bg-[#FCFAF8] border border-[#E8DED5] text-[#3E2C23] outline-none focus:border-[#B38A58] focus:ring-4 focus:ring-[#B38A58]/10 transition-all"
                                             placeholder="549351..."
                                         />
-                                        <Button variant="gold" onClick={() => { updatePhone(phoneInput); alert('¡Número Guardado!'); }}>
+                                        <Button variant="gold" onClick={() => { updatePhone(phoneInput); alert('¡Número Guardado!'); }} className="shrink-0">
                                             GUARDAR
                                         </Button>
                                     </div>
                                     <div className="mt-8 pt-8 border-t border-[#E8DED5]/50">
                                         <label className="block text-xs font-bold text-[#9C8775] mb-2 uppercase tracking-tighter">Instagram del Negocio</label>
-                                        <div className="flex gap-2">
+                                        <div className="flex flex-col xl:flex-row gap-2">
                                             <input
                                                 value={instagramInput}
                                                 onChange={e => setInstagramInput(e.target.value)}
-                                                className="flex-1 px-4 py-2 rounded-xl bg-[#FCFAF8] border border-[#E8DED5] text-[#3E2C23] outline-none focus:border-[#B38A58] focus:ring-4 focus:ring-[#B38A58]/10 transition-all"
+                                                className="flex-1 min-w-0 px-4 py-2 rounded-xl bg-[#FCFAF8] border border-[#E8DED5] text-[#3E2C23] outline-none focus:border-[#B38A58] focus:ring-4 focus:ring-[#B38A58]/10 transition-all"
                                                 placeholder="https://instagram.com/..."
                                             />
-                                            <Button variant="gold" onClick={() => { updateInstagramLink(instagramInput); alert('¡Link de Instagram Guardado!'); }}>
+                                            <Button variant="gold" onClick={() => { updateInstagramLink(instagramInput); alert('¡Link de Instagram Guardado!'); }} className="shrink-0">
                                                 GUARDAR
                                             </Button>
                                         </div>
