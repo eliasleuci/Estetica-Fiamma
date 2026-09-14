@@ -85,7 +85,8 @@ export function ClientSearch() {
                 if (isAttended || isAbsent || isPast) {
                     client.pastBookings.push(booking);
                     
-                    if (isAttended) {
+                    // Count as visit if they attended, OR if it's in the past and they weren't explicitly marked as absent
+                    if (isAttended || (!isAbsent && isPast)) {
                         client.totalVisits++;
                         client.totalSpent += booking.price || 0;
 
