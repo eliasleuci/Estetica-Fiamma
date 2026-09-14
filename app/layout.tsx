@@ -18,6 +18,11 @@ const lato = Lato({
 export const metadata: Metadata = {
   title: "Fiamma Maniscalco | Cosmetología y Cosmiatría",
   description: "Tratamientos estéticos exclusivos en Córdoba, Argentina.",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 import { SocialLinks } from "@/components/public/SocialLinks";
