@@ -241,7 +241,7 @@ interface ConfigContextType {
     updateServiceInventoryCost: (link: ServiceInventoryCost) => void;
     deleteServiceInventoryCost: (id: string) => void;
     // Analytics
-    calculateAnalytics: () => void;
+    calculateAnalytics: (year?: number, month?: number) => void;
     importHolidays: () => void;
     resetToDefaults: () => void;
     notification: { message: string, type: 'success' | 'error' } | null;
@@ -1156,11 +1156,14 @@ export function ConfigProvider({ children }: { children: React.ReactNode }) {
         await supabase.from('service_inventory_costs').delete().eq('id', id);
     };
 
-    const calculateAnalytics = () => {
+    const calculateAnalytics = (year?: number, month?: number) => {
         if (!bookings.length) return;
 
-        const thisYear = new Date().getFullYear();
-        const thisMonth = new Date().getMonth();
+        // Selected period (defaults to current month); the trend chart always ends at the real current month
+        const thisYear = year ?? new Date().getFullYear();
+        const thisMonth = month ?? new Date().getMonth();
+        const realYear = new Date().getFullYear();
+        const realMonth = new Date().getMonth();
 
         const attendedBookings = bookings.filter(b => b.status === 'attended' || b.status === 'confirmed');
 
@@ -1228,7 +1231,7 @@ export function ConfigProvider({ children }: { children: React.ReactNode }) {
         // Income by month (last 12 months)
         const incomeByMonth: Array<{ month: string; income: number }> = [];
         for (let i = 11; i >= 0; i--) {
-            const d = new Date(thisYear, thisMonth - i, 1);
+            const d = new Date(realYear, realMonth - i, 1);
             const monthBookings = attendedBookings.filter(b => {
                 const bd = new Date(b.date);
                 return bd.getMonth() === d.getMonth() && bd.getFullYear() === d.getFullYear();

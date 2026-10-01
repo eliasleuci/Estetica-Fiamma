@@ -19,11 +19,23 @@ export function AnalyticsDashboard() {
     } = useConfig();
 
     const [timeframe, setTimeframe] = useState<3 | 6 | 12>(6);
+    const today = new Date();
+    const [selYear, setSelYear] = useState(today.getFullYear());
+    const [selMonth, setSelMonth] = useState(today.getMonth());
 
-    // Recalculate on mount and when data changes
+    const MONTH_NAMES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const isCurrentMonth = selYear === today.getFullYear() && selMonth === today.getMonth();
+
+    const shiftMonth = (delta: number) => {
+        const d = new Date(selYear, selMonth + delta, 1);
+        setSelYear(d.getFullYear());
+        setSelMonth(d.getMonth());
+    };
+
+    // Recalculate on mount, when data changes or when the selected month changes
     useEffect(() => {
-        calculateAnalytics();
-    }, [bookings, expenses, inventoryItems, serviceInventoryCosts]);
+        calculateAnalytics(selYear, selMonth);
+    }, [bookings, expenses, inventoryItems, serviceInventoryCosts, selYear, selMonth]);
 
     if (!analyticsMetrics) {
         return (
@@ -38,10 +50,9 @@ export function AnalyticsDashboard() {
     const m = analyticsMetrics;
 
     // This month expenses
-    const now = new Date();
     const thisMonthExpenses = expenses.filter(e => {
         const d = new Date(e.date);
-        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+        return d.getMonth() === selMonth && d.getFullYear() === selYear;
     });
     const totalExpenses = thisMonthExpenses.reduce((sum, e) => sum + e.amount, 0);
     const netProfit = m.thisMonthIncome - totalExpenses;
@@ -51,9 +62,57 @@ export function AnalyticsDashboard() {
 
     return (
         <Card>
-            <div className="mb-8">
-                <h2 className="text-2xl font-serif font-bold text-stone-800">Panel de Analítica</h2>
-                <p className="text-xs text-stone-400 mt-1">Resumen del mes actual</p>
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+                <div>
+                    <h2 className="text-2xl font-serif font-bold text-stone-800">Panel de Analítica</h2>
+                    <p className="text-xs text-stone-400 mt-1">
+                        {isCurrentMonth ? 'Resumen del mes actual' : `Resumen de ${MONTH_NAMES[selMonth]} ${selYear}`}
+                    </p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 bg-stone-200/50 p-1 rounded-lg">
+                        <button
+                            onClick={() => shiftMonth(-1)}
+                            aria-label="Mes anterior"
+                            className="w-7 h-7 flex items-center justify-center rounded-md text-stone-500 hover:bg-white hover:text-[#C5A02E] transition-all"
+                        >
+                            ‹
+                        </button>
+                        <select
+                            value={selMonth}
+                            onChange={e => setSelMonth(Number(e.target.value))}
+                            className="bg-transparent text-xs font-bold text-stone-700 outline-none cursor-pointer"
+                        >
+                            {MONTH_NAMES.map((name, i) => (
+                                <option key={name} value={i}>{name}</option>
+                            ))}
+                        </select>
+                        <select
+                            value={selYear}
+                            onChange={e => setSelYear(Number(e.target.value))}
+                            className="bg-transparent text-xs font-bold text-stone-700 outline-none cursor-pointer"
+                        >
+                            {Array.from({ length: 5 }, (_, i) => today.getFullYear() - 3 + i).map(y => (
+                                <option key={y} value={y}>{y}</option>
+                            ))}
+                        </select>
+                        <button
+                            onClick={() => shiftMonth(1)}
+                            aria-label="Mes siguiente"
+                            className="w-7 h-7 flex items-center justify-center rounded-md text-stone-500 hover:bg-white hover:text-[#C5A02E] transition-all"
+                        >
+                            ›
+                        </button>
+                    </div>
+                    {!isCurrentMonth && (
+                        <button
+                            onClick={() => { setSelYear(today.getFullYear()); setSelMonth(today.getMonth()); }}
+                            className="px-3 py-1.5 text-[10px] font-bold uppercase rounded-lg bg-[#C5A02E]/10 text-[#C5A02E] hover:bg-[#C5A02E]/20 transition-all"
+                        >
+                            Hoy
+                        </button>
+                    )}
+                </div>
             </div>
 
             {/* ─── KPI CARDS ─── */}
@@ -97,7 +156,7 @@ export function AnalyticsDashboard() {
                     <div className="absolute top-0 right-0 w-16 h-16 bg-[#C5A02E]/5 rounded-full -translate-y-4 translate-x-4" />
                     <p className="text-[10px] font-bold text-stone-400 uppercase tracking-tighter">Clientes Nuevos</p>
                     <p className="text-2xl font-bold text-stone-800 mt-1">{m.newClientsThisMonth}</p>
-                    <p className="text-[10px] text-stone-400 mt-1">este mes</p>
+                    <p className="text-[10px] text-stone-400 mt-1">{isCurrentMonth ? 'este mes' : 'en el mes elegido'}</p>
                 </div>
             </div>
 
@@ -218,7 +277,7 @@ export function AnalyticsDashboard() {
 
                 {/* Profit Summary */}
                 <div className="bg-stone-50 p-5 rounded-2xl border border-stone-100">
-                    <p className="text-xs font-bold text-stone-400 uppercase tracking-tighter mb-4">Resultado del Mes</p>
+                    <p className="text-xs font-bold text-stone-400 uppercase tracking-tighter mb-4">Resultado de {isCurrentMonth ? 'l Mes' : MONTH_NAMES[selMonth]}</p>
                     <div className="space-y-4">
                         <div className="flex justify-between items-center py-2 border-b border-stone-100">
                             <span className="text-sm text-stone-600">Ingresos</span>
