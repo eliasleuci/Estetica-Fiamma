@@ -786,13 +786,9 @@ export function ConfigProvider({ children }: { children: React.ReactNode }) {
         try {
             let serviceId = booking.serviceId;
             if (!serviceId) {
+                // Servicio personalizado: si no coincide con ninguno del catálogo se guarda sin id
                 const matched = services.find(s => s.name.toLowerCase() === booking.serviceName.toLowerCase());
-                if (matched) {
-                    serviceId = matched.id;
-                } else {
-                    showNotification('Error: No se encontró el servicio seleccionado', 'error');
-                    return false;
-                }
+                serviceId = matched ? matched.id : '';
             }
 
             const { error } = await supabase.from('bookings').insert({
